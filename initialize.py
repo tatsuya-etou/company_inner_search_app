@@ -208,7 +208,7 @@ def file_load(path, docs_all):
         docs_all: データソースを格納する用のリスト
     """
     # ファイルの拡張子を取得
-    file_extension = os.path.splitext(path)[1]
+    file_extension = os.path.splitext(path)[1].lower()
     # ファイル名（拡張子を含む）を取得
     file_name = os.path.basename(path)
 
