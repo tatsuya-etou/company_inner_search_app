@@ -46,9 +46,10 @@ TEMPERATURE = 0.5
 # ==========================================
 # RAGのretriever設定
 # ==========================================
-RAG_CHUNK_SIZE = 500
-RAG_CHUNK_OVERLAP = 50
+RAG_CHUNK_SIZE = 2000
+RAG_CHUNK_OVERLAP = 200
 RAG_SEARCH_K = 5
+EMPLOYEE_INFO_FILE_NAME = "社員名簿.csv"
 
 # ==========================================
 # RAG参照用のデータソース系

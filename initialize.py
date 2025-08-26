@@ -15,6 +15,7 @@ from dotenv import load_dotenv
 import streamlit as st
 from docx import Document
 from langchain_community.document_loaders import WebBaseLoader
+from langchain_core.documents import Document
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
@@ -211,6 +212,20 @@ def file_load(path, docs_all):
     file_extension = os.path.splitext(path)[1].lower()
     # ファイル名（拡張子を含む）を取得
     file_name = os.path.basename(path)
+
+    # 社員名簿.csvのみ特別処理（全行を1ドキュメントに統合）
+    if file_name == ct.EMPLOYEE_INFO_FILE_NAME:
+        import csv
+        with open(path, encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            rows = list(reader)
+        # 1人1行の情報を整形して1つのテキストにまとめる
+        all_text = "\n".join([
+            f"社員ID: {row['社員ID']}\n氏名: {row['氏名（フルネーム）']}\n性別: {row['性別']}\n生年月日: {row['生年月日']}\n年齢: {row['年齢']}\nメールアドレス: {row['メールアドレス']}\n従業員区分: {row['従業員区分']}\n入社日: {row['入社日']}\n部署: {row['部署']}\n役職: {row['役職']}\nスキルセット: {row['スキルセット']}\n保有資格: {row['保有資格']}\n大学名: {row['大学名']}\n学部・学科: {row['学部・学科']}\n卒業年月日: {row['卒業年月日']}\n" for row in rows
+        ])
+        doc = Document(page_content=all_text, metadata={"source": path})
+        docs_all.append(doc)
+        return
 
     # 想定していたファイル形式の場合のみ読み込む
     if file_extension in ct.SUPPORTED_EXTENSIONS:
